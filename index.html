@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XZen — by Zain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #06b6d4;
+            --accent: #3b82f6;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+            animation: load 2s ease-out forwards;
+        }
+
+        @keyframes load {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* Particles Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite ease-in-out;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.5; }
+            25% { transform: translateY(-100px) translateX(50px); opacity: 0.8; }
+            50% { transform: translateY(-200px) translateX(-30px); opacity: 0.3; }
+            75% { transform: translateY(-100px) translateX(-50px); opacity: 0.6; }
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 3s ease infinite;
+            background-size: 200% 200%;
+            text-shadow: 0 0 80px rgba(139, 92, 246, 0.5);
+            margin-bottom: 20px;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .typing-container {
+            height: 40px;
+            margin-bottom: 40px;
+        }
+
+        .typing-text {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 600;
+            border-right: 3px solid var(--primary);
+            padding-right: 10px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--primary); }
+            50% { border-color: transparent; }
+        }
+
+        .cta-btn {
+            padding: 18px 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 100px 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* About Section */
+        .about {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .about-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--primary), transparent 30%);
+            animation: rotate 4s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.2);
+        }
+
+        .about-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .about-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .about-info h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .about-meta {
+            display: flex;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .about-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .about-desc {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .skill-badge {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .skill-badge:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transform: scale(1.05);
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 30px;
+            background: #24292e;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .github-btn:hover {
+            background: #333;
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* App Store Section */
+        .app-store {
+            background: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.05), transparent);
+        }
+
+        .category-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 4px solid var(--primary);
+            color: var(--secondary);
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .app-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+        }
+
+        .app-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.3);
+            border-color: var(--primary);
+        }
+
+        .app-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .app-card:hover .app-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .app-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .app-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .app-btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .app-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+        }
+
+        .app-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+        }
+
+        .app-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feature-card h4 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-divider {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), var(--primary), transparent);
+            margin: 0 auto 40px;
+            border-radius: 2px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px var(--primary); }
+            50% { box-shadow: 0 0 30px var(--primary), 0 0 50px var(--secondary); }
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .footer-text span {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Easter Egg Popup */
+        .easter-egg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 40px 60px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 10001;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 60px rgba(139, 92, 246, 0.5);
+        }
+
+        .easter-egg.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .easter-egg h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .easter-egg p {
+            opacity: 0.9;
+        }
+
+        /* Scroll reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .about-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .about-card {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-logo">XZen</div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Easter Egg Popup -->
+    <div class="easter-egg" id="easterEgg">
+        <h3>🚀 Secret Found!</h3>
+        <p>Built by Zain — Age 16 — Future Legend Loading...</p>
+    </div>
+
+    <!-- Particles -->
+    <div id="particles"></div>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-logo">XZen</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#apps">Apps</a></li>
+            <li><a href="#features">Features</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <h1>XZen</h1>
+        <p class="hero-subtitle">All creations of Zain — Developer, JEE Aspirant & Future Tech Innovator</p>
+        <div class="typing-container">
+            <span class="typing-text" id="typingText"></span>
+        </div>
+        <a href="#apps" class="cta-btn">
+            <span>👉</span> Explore Apps
+        </a>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title reveal">About Me</h2>
+        <div class="about">
+            <div class="about-card reveal">
+                <div class="about-content">
+                    <div class="about-header">
+                        <div class="about-avatar">👨‍💻</div>
+                        <div class="about-info">
+                            <h3>Zain</h3>
+                            <div class="about-meta">
+                                <span>🎂 Age: 16</span>
+                                <span>📚 Class: 11th</span>
+                                <span>🎯 JEE Aspirant</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="about-desc">
+                        I am a passionate young developer who builds web apps, AI tools, and study platforms while preparing for JEE. I love experimenting with UI, automation, and futuristic designs. Every line of code I write brings me closer to my dreams of becoming a tech innovator.
+                    </p>
+                    <div class="skills">
+                        <span class="skill-badge">HTML</span>
+                        <span class="skill-badge">CSS</span>
+                        <span class="skill-badge">JavaScript</span>
+                        <span class="skill-badge">UI Design</span>
+                        <span class="skill-badge">AI Tools</span>
+                    </div>
+                    <a href="https://github.com/Whatyouthink21" target="_blank" class="github-btn">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        GitHub Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Store Section -->
+    <section class="app-store" id="apps">
+        <h2 class="section-title reveal">App Store</h2>
+
+        <!-- Entertainment -->
+        <h3 class="category-title reveal">🎬 Entertainment</h3>
+        <div class="apps-grid">
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">🎬</div>
+                <h4 class="app-name">Priva</h4>
+                <p class="app-desc">Free movie streaming site with a vast collection of films and series.</p>
+                <div class="app-buttons">
+                    <a href="https://privagg.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">🎥</div>
+                <h4 class="app-name">OP BOI Movies</h4>
+                <p class="app-desc">Testing platform for experimental movie streaming features.</p>
+                <div class="app-buttons">
+                    <a href="https://op-boi-movies.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">📺</div>
+                <h4 class="app-name">ZenShows</h4>
+                <p class="app-desc">Second testing movie platform with enhanced features.</p>
+                <div class="app-buttons">
+                    <a href="https://zen-shows.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">🎵</div>
+                <h4 class="app-name">XTunes</h4>
+                <p class="app-desc">Music streaming app for your favorite tunes on the go.</p>
+                <div class="app-buttons">
+                    <a href="/apk/xtunes.apk" download class="app-btn secondary">📥 Download APK</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <h3 class="category-title reveal">🎓 Education</h3>
+        <div class="apps-grid">
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">📝</div>
+                <h4 class="app-name">XPress Mock</h4>
+                <p class="app-desc">JEE mock test in NTA style with realistic exam experience.</p>
+                <div class="app-buttons">
+                    <a href="https://xpress-jee-mock.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">📚</div>
+                <h4 class="app-name">ICSE Syllabus Tracker</h4>
+                <p class="app-desc">Track your ICSE syllabus progress and stay organized.</p>
+                <div class="app-buttons">
+                    <a href="https://icse-syllabus-track.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">🧮</div>
+                <h4 class="app-name">ICSE Percentage Calculator</h4>
+                <p class="app-desc">Calculate your ICSE percentages with precision.</p>
+                <div class="app-buttons">
+                    <a href="https://icse-per-calc.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools -->
+        <h3 class="category-title reveal">🤖 Tools</h3>
+        <div class="apps-grid">
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">🤖</div>
+                <h4 class="app-name">Anonymo AI Chatbot</h4>
+                <p class="app-desc">AI-powered chatbot for anonymous conversations and help.</p>
+                <div class="app-buttons">
+                    <a href="https://anonymox.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+
+            <div class="app-card reveal" data-tilt>
+                <div class="app-icon">💬</div>
+                <h4 class="app-name">ChatX Private Chat</h4>
+                <p class="app-desc">Secure private chat application for confidential messaging.</p>
+                <div class="app-buttons">
+                    <a href="https://chatx-liart.vercel.app/" target="_blank" class="app-btn primary">🌐 Open Website</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <h2 class="section-title reveal">What Makes Me Different</h2>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <span class="feature-icon">👶</span>
+                <h4>Built at Age 16</h4>
+            </div>
+            <div class="feature-card reveal">
+                <span class="feature-icon">🛠️</span>
+                <h4>Fully Self-Made Apps</h4>
+            </div>
+            <div class="feature-card reveal">
+                <span class="feature-icon">📖</span>
+                <h4>Learning Daily</h4>
+            </div>
+            <div class="feature-card reveal">
+                <span class="feature-icon">🤖</span>
+                <h4>AI + Web Dev Enthusiast</h4>
+            </div>
+            <div class="feature-card reveal">
+                <span class="feature-icon">🚀</span>
+                <h4>Future Tech Founder</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-divider"></div>
+        <p class="footer-text">Made with <span>❤️</span> passion by <span>Zain</span></p>
+        <div class="social-links">
+            <a href="https://github.com/Whatyouthink21" target="_blank" class="social-link" title="GitHub">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 2200);
+        });
+
+        // Create Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 20) + 's';
+                
+                const colors = ['#8b5cf6', '#06b6d4', '#3b82f6'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 ${10 + Math.random() * 10}px ${particle.style.background}`;
+                particle.style.width = (2 + Math.random() * 4) + 'px';
+                particle.style.height = particle.style.width;
+                
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Typing Animation
+        const phrases = [
+            "Building apps at 16",
+            "JEE Aspirant",
+            "Frontend Developer",
+            "Dreaming Big"
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById('typingText');
+
+        function typeText() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeText, typeSpeed);
+        }
+        setTimeout(typeText, 2500);
+
+        // Scroll Reveal
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            const windowHeight = window.innerHeight;
+
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // Card Tilt Effect
+        const cards = document.querySelectorAll('[data-tilt]');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-15px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+
+        // Easter Egg
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'z') {
+                const egg = document.getElementById('easterEgg');
+                egg.classList.add('show');
+                setTimeout(() => {
+                    egg.classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        // Parallax Effect on Mouse Move
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            particles.forEach((particle, index) => {
+                const speed = (index % 5 + 1) * 0.5;
+                const xOffset = (x - 0.5) * speed * 30;
+                const yOffset = (y - 0.5) * speed * 30;
+                particle.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(5, 5, 8, 0.95)';
+            } else {
+                nav.style.background = 'rgba(10, 10, 15, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>
